@@ -1,3 +1,6 @@
+No es necesario configurar base de datos por que tiene configurada una en HEROKU.
+solo es instalar y probar.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
