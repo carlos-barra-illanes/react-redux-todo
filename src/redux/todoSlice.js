@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 import Global from '../Global';
-
 export const getTodosAsync = createAsyncThunk(
 	'todos/getTodosAsync',
 	async () => {
@@ -16,7 +15,6 @@ export const getTodosAsync = createAsyncThunk(
 export const addTodoAsync = createAsyncThunk(
 	'todos/addTodoAsync',
 	async (payload) => {
-		console.log(payload);
 		const resp = await fetch(Global.url, {
 			method: 'POST',
 			headers: {
@@ -35,8 +33,8 @@ export const addTodoAsync = createAsyncThunk(
 export const toggleCompleteAsync = createAsyncThunk(
 	'todos/completeTodoAsync',
 	async (payload) => {
-		const resp = await fetch(`Global.url/${payload.id}`, {
-			method: 'GET',
+		const resp = await fetch(Global.url +`/${payload.id}`, {
+			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -53,7 +51,7 @@ export const toggleCompleteAsync = createAsyncThunk(
 export const deleteTodoAsync = createAsyncThunk(
 	'todos/deleteTodoAsync',
 	async (payload) => {
-		const resp = await fetch(`Global.url/${payload.id}`, {
+		const resp = await fetch(Global.url + `/${payload.id}`, {
 			method: 'DELETE',
 		});
 
@@ -71,13 +69,13 @@ export const todoSlice = createSlice({
 			const todo = {
 				id: nanoid(),
 				title: action.payload.title,
-				vigente: false,
+				completed: false,
 			};
 			state.push(todo);
 		},
 		toggleComplete: (state, action) => {
 			const index = state.findIndex((todo) => todo.id === action.payload.id);
-			state[index].vigente = action.payload.vigente;
+			state[index].completed = action.payload.completed;
 		},
 		deleteTodo: (state, action) => {
 			return state.filter((todo) => todo.id !== action.payload.id);
@@ -94,7 +92,7 @@ export const todoSlice = createSlice({
 			const index = state.findIndex(
 				(todo) => todo.id === action.payload.todo.id
 			);
-			state[index].vigente = action.payload.todo.vigente;
+			state[index].completed = action.payload.todo.completed;
 		},
 		[deleteTodoAsync.fulfilled]: (state, action) => {
 			return state.filter((todo) => todo.id !== action.payload.id);
